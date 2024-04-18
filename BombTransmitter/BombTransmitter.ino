@@ -8,8 +8,8 @@ int currentColumn = 0;
 
 int redButton = 33;     // goes high when toggled
 int yellowButton = 32;  // goes low when pushed
-int upPin = 4;          // goes high when pushed
-int downPin = 2;        // goes high when pushed
+int upPin = 2;          // goes high when pushed
+int downPin = 4;        // goes high when pushed
 int leftPin = 25;       // goes to low when pushed
 int rightPin = 26;      // goes low when pushed
 
@@ -83,28 +83,22 @@ void loop() {
   lcd.setCursor(0, 0);
 
   // show the status of each button
-  // lcd.print(analogRead(redButton) > 130 ? 1 : 0);
-  // lcd.print(analogRead(yellowButton) < 250 ? 1 : 0);
-  // lcd.print(analogRead(leftPin) < 300 ? 1 : 0);
-  // lcd.print(analogRead(rightPin) < 400 ? 1 : 0);
+  lcd.print(analogRead(redButton) > 1 ? 1 : 0);
+  lcd.print(analogRead(yellowButton) < 100 ? 1 : 0);
+  lcd.print(analogRead(leftPin) < 100 ? 1 : 0);
+  lcd.print(analogRead(rightPin) < 100 ? 1 : 0);
   lcd.print(analogRead(upPin) > 0 ? 1 : 0);
-  lcd.print(" ");
-  lcd.print(analogRead(downPin) < 250 ? 1 : 0);
+  lcd.print(analogRead(downPin) > 0 ? 1 : 0);
 
   lcd.setCursor(0, 1);
 
   // calibration
-  // lcd.print(analogRead(redButton));
-  // lcd.print(" ");
-  // lcd.print(analogRead(yellowButton));
-  // lcd.print(" ");
+  lcd.print(analogRead(redButton));
+  lcd.print(analogRead(yellowButton));
   lcd.print(analogRead(upPin));
-  lcd.print("  ");
   lcd.print(analogRead(downPin));
-  // lcd.setCursor(0, 1);
-  // lcd.print(analogRead(leftPin));
-  // lcd.print("  ");
-  // lcd.print(analogRead(rightPin));
+  lcd.print(analogRead(leftPin));
+  lcd.print(analogRead(rightPin));
 
   if (analogRead(upPin)) {
   }
