@@ -3,6 +3,7 @@
 #include <LiquidCrystal_I2C.h>
 
 const int password = "1234321234";
+const unsigned long debounceDelay = 80;  // how long in ms a pin should be pressed to count
 
 const String receiverAddress = "http://123.123.123.123";
 const char* ssid = "HWDSB-GUEST";
@@ -27,6 +28,7 @@ const int btnThresholds[] = { 1, 1, 15, 15, 0, 0 };
 
 int buttonState[] = { 0, 0, 0, 0, 0, 0 };
 int lastButtonState[] = { 0, 0, 0, 0, 0, 0 };
+int lastDebounceTime[] = { 0, 0, 0, 0, 0, 0 };
 bool buttonIsPressed[] = { false, false, false, false, false, false };
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
@@ -127,14 +129,22 @@ void setup() {
 
 void loop() {
   for (int currentButton = 0; currentButton < 6; currentButton++) {
-    buttonIsPressed[currentButton] = btnType[currentButton] == 0
-                                       ? (analogRead(buttons[currentButton]) < btnThresholds[currentButton])
-                                       : (analogRead(buttons[currentButton]) > btnThresholds[currentButton]);
+    buttonState[currentButton] = btnType[currentButton] == 0
+                                   ? (analogRead(buttons[currentButton]) < btnThresholds[currentButton])
+                                   : (analogRead(buttons[currentButton]) > btnThresholds[currentButton]);
 
-    if (buttonIsPressed[currentButton]) {
-      Serial.print("button ");
-      Serial.println(buttons[currentButton]);
-      pressedAction(buttons[currentButton]);
+    if (buttonState[currentButton] != lastButtonState[currentButton]) {
+      lastDebounceTime[currentButton] = millis();
+    }
+    
+    if ((millis() - lastDebounceTime[currentButton]) > debounceDelay && buttonState[currentButton] != buttonIsPressed[currentButton]) {
+      buttonIsPressed[currentButton] = buttonState[currentButton];
+
+      if (buttonIsPressed[currentButton]) {
+        Serial.print("button ");
+        Serial.println(buttons[currentButton]);
+        pressedAction(buttons[currentButton]);
+      }
     }
   }
 
