@@ -2,7 +2,7 @@
 #include <HTTPClient.h>
 #include <LiquidCrystal_I2C.h>
 
-const int password = "1234321234";
+const String password = "1234321234";
 const unsigned long debounceDelay = 80;  // how long in ms a pin should be pressed to count
 
 const String receiverAddress = "http://123.123.123.123";
@@ -83,19 +83,19 @@ void pressedAction(int button) {
       break;
 
     case upPin:
-      typedIn.append("1");
+      typedIn += "1";
       break;
 
     case downPin:
-      typedIn.append("2");
+      typedIn += "2";
       break;
 
     case leftPin:
-      typedIn.append("3");
+      typedIn += "3";
       break;
 
     case rightPin:
-      typedIn.append("4");
+      typedIn += "4";
       break;
 
     default:
