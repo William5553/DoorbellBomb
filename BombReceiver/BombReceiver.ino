@@ -78,16 +78,17 @@ WiFiServer WebServer(80);
 WiFiClient client;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   //setup pin modes
   pinMode(doorbellPin, OUTPUT);
 
   // Connect to WiFi network
   Serial.println();
-  // WiFi.disconnect();
+  WiFi.disconnect();
   WiFi.hostname("Doorbell Receiver");
   WiFi.mode(WIFI_STA);
+  // TODO: set a static ip
   Serial.print("Connecting to ");
   Serial.println(ssid);
   WiFi.begin(ssid, password);
@@ -104,14 +105,13 @@ void setup() {
   Serial.println("Web Server started");
 
   // Print the IP address
-  Serial.print("You can connect to the bomb at this URL: ");
+  Serial.println("You can connect to the bomb at this URL:");
   Serial.print("http://");
   Serial.println(WiFi.localIP());
 }
 
 String format() {
   String stringified = String(index_html);
-
   stringified.replace("%doorbellplaceholder%", doorbellOn ? "ON" : "OFF");
   return stringified;
 }
@@ -120,7 +120,7 @@ void loop() {
   // Check if a user has connected
   client = WebServer.available();
   if (!client)  //restart loop
-    return;
+    return delay(300);
 
   // Wait until the user sends some data
   Serial.println("New User");
@@ -140,7 +140,6 @@ void loop() {
   client.flush();
 
   // Process the request:
-
   if (request.indexOf("/state") != -1) {
     client.println("HTTP/1.1 200 OK");
     client.println("Content-Type: application/json; charset=UTF-8");
@@ -153,10 +152,12 @@ void loop() {
   } else if (request.indexOf("/on") != -1) {
     doorbellOn = true;
     digitalWrite(doorbellPin, true);
+    client.println("Turned doorbell on");
     return;
   } else if (request.indexOf("/off") != -1) {
     doorbellOn = false;
     digitalWrite(doorbellPin, false);
+    client.println("Turned doorbell off");
     return;
   }
 

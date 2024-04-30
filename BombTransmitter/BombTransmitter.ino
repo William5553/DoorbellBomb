@@ -5,7 +5,7 @@
 const String password = "1234321234";
 const unsigned long debounceDelay = 80;  // how long in ms a pin should be pressed to count
 
-const String receiverAddress = "http://123.123.123.123";
+const String receiverAddress = "http://10.134.151.179";
 const char* ssid = "HWDSB-GUEST";
 const char* pass = "Education";
 
